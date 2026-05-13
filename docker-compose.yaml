@@ -1,0 +1,115 @@
+services:
+ 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+    environment:
+      - discovery.type=single-node
+      #
+      #
+
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    healthcheck:
+      interval: 10s
+      retries: 12
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:8200/
+
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.9
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch 
+    
+
+
+  minio:
+    image: minio/minio:latest
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+  
+  catalog_management:
+    container_name: catalog_management
+    build:
+      context: ./
+      dockerfile: ./services/catalog_management/Dockerfile
+    volumes:
+      - ./services/catalog_management:/WORKDIR
+    ports:
+      - "8000:8000"
+    depends_on:
+      - minio
+      - elasticsearch
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - MINIO_URL=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+    
+    
+  store-front-service:
+    container_name: store-front-service
+    build:
+      context: ./
+      dockerfile: ./services/store-front-service/Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./services/store-front-service:/WORKDIR
+    environment:
+      - CATALOG_SERVICE_URL=http://catalog_management:8000
+      - SECRET_KEY=mysecretkey
+      - LOHIN_SERVICE_NAME=user-management
+      
+    depends_on:
+      - catalog_management
+      - user-management 
+  
+  
+
+
+  user-management:
+    container_name: user-management
+    build:
+      context: ./
+      dockerfile: ./services/user-management/Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./services/user-management:/WORKDIR
+    depends_on:
+      - minio
+      - elasticsearch
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT=9200
+      - SECRET_KEY=mysecretkey # חשוב להפיץ בין הסרוויסים
+
+  
+volumes:
+  elasticsearch_data:
+  minio_data:

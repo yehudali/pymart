@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic[email]
+pydantic
+elasticsearch
+dotenv
+minio
+python-multipart
+boto3
+python-jose

@@ -1,0 +1,8 @@
+altair
+streamlit
+pandas
+pydantic-settings
+requests
+extra_streamlit_components
+minio
+python-jose
