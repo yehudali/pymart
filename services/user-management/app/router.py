@@ -24,7 +24,8 @@ def login(data:LoginRequest):
     if not user or not data.password == user["password"]: #do hash!
         raise HTTPException(status_code=401 ,detail="Can't login pasword or email is wrong")
     
-    token = make_token(user_id)
+    is_manager = user.get("is_manager")
+    token = make_token(user_id, is_manager)
     return {"token":token}
 
 
@@ -38,5 +39,6 @@ def get_profile(token:str):
         "user_id":user_id,
         "name":user.get('name'),
         "email":user.get('email'),
-        "address":user.get('address')
+        "address":user.get('address'),
+        "is_manager":user.get('is_manager')
     }

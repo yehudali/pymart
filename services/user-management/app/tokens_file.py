@@ -13,15 +13,16 @@ def find_user_by_email(email):
         hits = result["hits"]["hits"]
         if hits:
             return hits[0]["_id"], hits[0]["_source"]
+            
         else:
             return None, None
     except Exception as err:
         print(err)
         return None, None
 
-def make_token(user_id):
+def make_token(user_id, is_manager):
     expire = datetime.utcnow() + timedelta(hours=1)
-    return jwt.encode({"sub":user_id, "exp": expire}, SECRET_KEY, algorithm="HS256")
+    return jwt.encode({"sub":user_id, "exp": expire, "is_manager":is_manager}, SECRET_KEY, algorithm="HS256")
 
 def get_user_id_from_token(token:str):
     try:
@@ -30,6 +31,18 @@ def get_user_id_from_token(token:str):
     except Exception as err:
         print(err)
         return None
+    
+
+def check_administrator_by_token(token:str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY,  algorithms=["HS256"])
+        return payload["is_manager"]
+    except Exception as err:
+        print(err)
+        return None
+
+
+
 
 def get_user_by_id(id):
     try:
