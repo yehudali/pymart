@@ -1,10 +1,10 @@
 import uuid
 from fastapi import APIRouter, HTTPException
-from schemas import RegisterRequest, LoginRequest
-router = APIRouter()
 from elasticshearch_file import elasic_instance
+from schemas import RegisterRequest, LoginRequest
 from tokens_file import SECRET_KEY, find_user_by_email, make_token, get_user_id_from_token, get_user_by_id
 
+router = APIRouter()
 
 @router.post("/user")
 def create_user(data:RegisterRequest):
@@ -22,7 +22,7 @@ def create_user(data:RegisterRequest):
 def login(data:LoginRequest):
     user_id, user = find_user_by_email(data.email)
     if not user or not data.password == user["password"]: #do hash!
-        raise HTTPException(status_code=401 ,detail="Can't login")
+        raise HTTPException(status_code=401 ,detail="Can't login pasword or email is wrong")
     
     token = make_token(user_id)
     return {"token":token}

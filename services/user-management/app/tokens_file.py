@@ -7,6 +7,17 @@ from elasticshearch_file import elasic_instance
 import os
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
+def find_user_by_email(email):
+    try:
+        result = elasic_instance.es.search(index="users", body={"query": {"term": {"email.keyword": email}}})
+        hits = result["hits"]["hits"]
+        if hits:
+            return hits[0]["_id"], hits[0]["_source"]
+        else:
+            return None, None
+    except Exception as err:
+        print(err)
+        return None, None
 
 def make_token(user_id):
     expire = datetime.utcnow() + timedelta(hours=1)
@@ -20,21 +31,10 @@ def get_user_id_from_token(token:str):
         print(err)
         return None
 
-def find_user_by_email(email):
-    try:
-        result = elasic_instance.es.search(index="users", body={"query": {"term": {"email.keyword": email}}})
-        hits = result["hits"]["hits"]
-        if hits:
-            return hits[0]["_id"], hits[0]["_source"]
-        else:
-            return None, None
-    except Exception as err:
-        print(err)
-        return None, None
-
 def get_user_by_id(id):
     try:
         result = elasic_instance.es.get(index="users",id=id)
-        return result["_source"]
+        user = result["_source"]
+        return user
     except:
         return None

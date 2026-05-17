@@ -1,106 +1,74 @@
 import extra_streamlit_components as stx
+from catalog import cookie_manager
 import streamlit as st
-import os
 import requests
-from schemas import LoginRequest
-from main import cookie_manager
+import os
 
+USER_SERVICE_HOST = os.getenv("USER_SERVICE_HOST", "user_management")
+API_URL = f"http://{USER_SERVICE_HOST}:8001/"
 
+SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
+token = cookie_manager.get(SECRET_KEY)
 
-
-
-def get_login_service_name():
-    return os.getenv("LOGIN_SERVICE_URL", "http://localhost:8001")
-
-def login_process(data:LoginRequest):
-    LOGIN_SERVICE_NAME = get_login_service_name()
-
-    SECRET_KEY = os.getenv("SECRET_KEY")
-    token = requests.post(f"http://{LOGIN_SERVICE_NAME}:8001/login", json=data.model_dump()).json().get("token")
-
-    cookie_manager.set(SECRET_KEY, token)
-
+st.title("צור משתמש")
+with st.form("create_user_form"):
+    name = st.text_input("Name")
+    email = st.text_input("Email")
+    password = st.text_input("Password")
+    is_manager = st.checkbox("Is Manager?")
+    address = st.text_input("Address")
     
+    submit_button = st.form_submit_button("צור משתמש")
+
+if submit_button:
+    payload = {
+        "name": name,
+        "email": email,
+        "password": password,
+        "is_manager": is_manager,
+        "address": address
+    }
+    
+    response = requests.post(f"{API_URL}user", json=payload, cookies={SECRET_KEY: token})
+    
+    if response.status_code == 200:
+        st.success(f"המשתמש {payload['name']} נוצר בהצלחה!")
+        st.json(response.json())
+    else:
+        st.error(f"נכשל: {response.status_code}")
+        st.write(response.text)
+
+
+st.title("התחברות (Login)")
+
 
 with st.form("login_form"):
-        email = st.text_input("Email")
-        password = st.text_input("PAssword")
-        submitted = st.form_submit_button("התחבר")
-        if submitted:
-            if not email or not password:
-                st.warning("!מלא את 2 השדות")
-            else:
-                try:
-                    login_process(LoginRequest(email=email, password=password)) 
-                    st.success("התחברת בהצלחה!")   
-                except Exception as e:
-                    st.error(f"התחברות נכשלה: {e}")
+    email = st.text_input("Email")
+    password = st.text_input("Password")
+
+    submit_button = st.form_submit_button("התחבר")
+
+if submit_button:
+    if email and password:
+        payload = {
+            "email": email,
+            "password": password
+        }
+        
+        response = requests.post(f"{API_URL}login", json=payload, cookies={SECRET_KEY: token})
+        
+        if response.status_code == 200:
+            st.success("התחברת בהצלחה!")
+            response_data = response.json()
+            st.json(response_data)
+
+            token = response_data.get("token")
+            if token:
+                cookie_manager.set(SECRET_KEY, token)
+                st.info("הטוקן נשמר בקוקיז!")
+        else:
+            st.error(f"התחברות נכשלה: {response.status_code}")
+            st.write(response.text)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-########################
-#########################3
-#####################
-# import streamlit as st
-# import sys
-# import os
-
-# # הוספת תיקיית app לנתיב כדי לאפשר יבוא נקי של שכבת ה-API
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-# from api.catalog import login_user
-
-# st.title("🔐 התחברות למערכת")
-
-# with st.form("login_form"):
-#     email = st.text_input("אימייל")
-#     password = st.text_input("סיסמה")
-#     submitted = st.form_submit_button("התחבר")
-
-# if submitted:
-#     if not email or not password:
-#         st.warning("מלא את 2 השדות")
-#     else:
-#         try:
-#             with st.spinner("מתחבר..."):
-#                 token = login_user(email, password)
-#                 print("Received token:", token)  # Debug log
-
-#                 st.session_state.token = token
-#                 st.success("התחברת בהצלחה!")
-#         except Exception as e:
-#             st.error("התחברות נכשלה. אנא בדוק את פרטי הגישה.")
-
-
-
-
-            # הרשמה 
-            # והתחברות
 

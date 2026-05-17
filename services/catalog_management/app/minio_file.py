@@ -16,7 +16,7 @@ client = Minio(env.MINIO_URL,
                 )
 
 client_boto3 =boto3.client("s3",
-                            endpoint_url=f"http://{env.MINIO_URL}",
+                            endpoint_url=f"http://host.docker.internal:9000",
                               aws_access_key_id=env.MINIO_ACCESS_KEY,
                                 aws_secret_access_key=env.MINIO_SECRET_KEY,
                                 verify=False)
@@ -30,21 +30,32 @@ if not found:
 def upload_image_to_minio(file:BinaryIO, file_name:str):
     try:
         bucket_name = "product"
-        client_boto3.upload_fileobj(file, bucket_name, f"{file_name}.png")
+        client_boto3.upload_fileobj(file, bucket_name, file_name)
         print("the new image url is: ", get_image_url(bucket_name=bucket_name, object_name=f"{file_name}.png"))
         return {"add image": "successfully"}
     except Exception as err:
-        return f"procces failed:{err}"
+        print(f"procces failed:{err}")
+        return False
 
-def get_image_url(bucket_name, object_name):
-    
-    try:
-        if client.stat_object(bucket_name, object_name).bucket_name == bucket_name:
-            print(f"'{object_name}' - picture was found in the archive")
-            return client.presigned_get_object(bucket_name=bucket_name, object_name=object_name)
+# def get_image_url(bucket_name, object_name):
+#     try:
+#         if client.stat_object(bucket_name, object_name).bucket_name == bucket_name:
+#             print(f"'{object_name}' - picture was found in the archive!")
+#             print((type(bucket_name)), type(object_name))
         
-    except S3Error:
-        print(f"There is no image '{object_name}' in the archive.")
-        return client.presigned_get_object(bucket_name, "no_image.png")
-    ## נדרש להעלות תמונה בשם no_image.png
-    ## כדי להחזיר תמונה ברירת מחדל במקרה של חוסר תמונה
+#             return client.presigned_get_object(bucket_name=bucket_name, object_name=object_name)
+            
+        
+#     except Exception as e: 
+#         print(f"The actual error is: {e}")
+#         print(f"Error type: {type(e)}")
+#         return False
+def get_image_url(bucket_name, object_name):
+    try:
+        image_url = client.presigned_get_object(bucket_name=bucket_name, object_name=object_name)
+        print(f"The image url is: {image_url}")
+        return image_url
+    
+    except Exception as e:
+        print(f"The actual error is: {e}")
+        return False
