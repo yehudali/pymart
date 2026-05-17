@@ -5,7 +5,7 @@ import uuid
 from elasticshearch_file import elasic_instance
 
 import os
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 def find_user_by_email(email):
     try:

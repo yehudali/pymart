@@ -9,7 +9,7 @@ API_URL = f"http://{CATALOG_SERVICE_HOST}:8000/"
 
 SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
 token = cookie_manager.get(SECRET_KEY)
-
+st.info({"token":token})
 
 st.title("הוספת מוצר-לאלסטיק")
 
@@ -34,7 +34,8 @@ if submit_button:
     }
     
     response = requests.post(f"{API_URL}product/", json=payload, cookies={SECRET_KEY: token})
-    
+
+
     if response.status_code == 200:
         st.success(f"המוצר  {payload['name']} התווסף בהצלחה!")
         st.json(response.json())

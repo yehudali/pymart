@@ -79,7 +79,7 @@ services:
       - ./services/store-front-service:/WORKDIR
     environment:
       - CATALOG_SERVICE_URL=http://catalog_management:8000
-      - SECRET_KEY=mysecretkey
+    
       # - LOHIN_SERVICE_NAME=user-management #כבר אין צורך בשלב הזה
       
       - MINIO_URL=host.docker.internal:9000
@@ -87,7 +87,7 @@ services:
       - MINIO_SECRET_KEY=minioadmin
       - CATALOG_SERVICE_HOST=catalog_management
       - USER_SERVICE_HOST=user-management
-      - SECRET_KEY="mysecretkey"
+      - SECRET_KEY=mysecretkey
       
     depends_on:
       - catalog_management

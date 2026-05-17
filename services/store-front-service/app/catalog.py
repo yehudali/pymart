@@ -24,10 +24,6 @@ minio_client = Minio(MINIO_URL,
                 )
 
 
-
-
-
-
 def main():
     st.title("pymart 🏰⚡☁️")
 
