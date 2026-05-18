@@ -16,7 +16,7 @@ client = Minio(env.MINIO_URL,
                 )
 
 client_boto3 =boto3.client("s3",
-                            endpoint_url=f"http://host.docker.internal:9000",
+                            endpoint_url=f"http://{env.MINIO_URL}",
                               aws_access_key_id=env.MINIO_ACCESS_KEY,
                                 aws_secret_access_key=env.MINIO_SECRET_KEY,
                                 verify=False)
