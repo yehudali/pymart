@@ -10,7 +10,7 @@ router = APIRouter()
 fastapi_order_tag = ["orders"]
 
 
-@router.post("/product/", tags=fastapi_order_tag)
+@router.post("/product/", tags=fastapi_order_tag) # type: ignore
 async def add_new_product_to_elastic(product:InsertProduct, token = Depends(check_if_is_admin_user)): # , user = Depends(get_current_user)
     product_id = add_new_product(product.model_dump())
     if product_id:
@@ -19,7 +19,7 @@ async def add_new_product_to_elastic(product:InsertProduct, token = Depends(chec
         return {"status": "failed to create product"}
 
 
-@router.put("/product/{id}", tags=fastapi_order_tag)
+@router.put("/product/{id}", tags=fastapi_order_tag) # type: ignore
 async def update_elastic_product(product:UpdateProduct, id:str, token = Depends(check_if_is_admin_user)):
     response = update_product(product=product.model_dump(exclude_unset=True), product_id=id)
     if response == True:
@@ -28,7 +28,7 @@ async def update_elastic_product(product:UpdateProduct, id:str, token = Depends(
         return response
 
 
-@router.delete("/product/{id}", tags=fastapi_order_tag)
+@router.delete("/product/{id}", tags=fastapi_order_tag) # type: ignore
 async def delete_elastic_product(id, token = Depends(check_if_is_admin_user)):
     re = delete_product(id)
     if not re:
@@ -39,7 +39,7 @@ async def delete_elastic_product(id, token = Depends(check_if_is_admin_user)):
 
 
 
-@router.get("/product/{id}", tags=fastapi_order_tag)
+@router.get("/product/{id}", tags=fastapi_order_tag) # type: ignore
 async def get_product_from_elastic_by_id(id, token = Depends(checking_basic_user_permissions)):
     respons = get_product_by_id(id)
     if not respons:
@@ -48,7 +48,7 @@ async def get_product_from_elastic_by_id(id, token = Depends(checking_basic_user
         return respons
     
 
-@router.get("/product/", tags=fastapi_order_tag, response_model=List[ResponseProduce])
+@router.get("/product/", tags=fastapi_order_tag, response_model=List[ResponseProduce]) # type: ignore
 async def get_all_product_from_elastic(token = Depends(checking_basic_user_permissions)):
     try:
         product_info = get_all_products()

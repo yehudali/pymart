@@ -1,25 +1,21 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 import uvicorn
 import router_product
 import router_image
+import route_healthcheck
 
 
-from elasticsearch_file import elasticsearch_helthchack
+@asynccontextmanager
+async def lifespan(app:FastAPI):
+    print("dhe app is starting up...")
+    yield
+    print("dhe app is shutting down...")
+
+app = FastAPI(lifespan=lifespan)
 
 
-
-app = FastAPI()
-
-
-@app.get("/")
-async def tetsing():
-    return {"message": "catalog api"}
-
-@app.get("/health")
-async def health_check():
-    elastic_response = elasticsearch_helthchack()
-    return {"elasticsearch is connected?": elastic_response}
-
+app.include_router(route_healthcheck.router)
 app.include_router(router_product.router)
 app.include_router(router_image.router)
 

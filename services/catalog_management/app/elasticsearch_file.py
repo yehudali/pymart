@@ -73,6 +73,3 @@ def get_product_by_name(name:str):
     except Exception as e:
         print(e)
         return None
-    # {'took': 3, 'timed_out': False, '_shards': {'total': 1, 'successful': 1, 'skipped': 0, 'failed': 0}, 'hits': {'total': {'value': 1, 'relation': 'eq'}, 'max_score': 2.1911242, 'hits': [{'_index': 'products', '_type': '_doc', '_id': 'CbfnIZ4BHEel-3wZhBPp', '_score': 2.1911242, '_ignored': ['image_url.keyword'], '_source': {'name': 'hhhhh', 'description': 'Artisan loaf, baked fresh', 'price': 5.49, 'category': 'Bakery', 'stock_count': 10, 'image_url': 'http://minio:9000/product/no_image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20260513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260513T151504Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=e8461134a03a74e7eb04fab46d62586323b5aeb713654c19d55f98ade2328922'}}]}}
-            
-            # uv run uvicorn products.products_management:app --reload
