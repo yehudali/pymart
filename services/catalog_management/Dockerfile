@@ -1,6 +1,6 @@
 FROM python:3.8-slim
 WORKDIR /WORKDIR
-COPY requirements.txt .
+COPY ./services/catalog_management/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 EXPOSE 8000
