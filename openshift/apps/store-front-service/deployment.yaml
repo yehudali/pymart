@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store-front-service
+  labels:
+    app: store-front-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: store-front-service
+  template:
+    metadata:
+      labels:
+        app: store-front-service
+    spec:
+      containers:
+      - name: store-front-service
+        image: yehudalinker/store-front-service:v1
+        ports:
+        - containerPort: 8501
+        env:
+        - name: CATALOG_SERVICE_URL
+          value: "http://catalog-management:8000"
+        - name: MINIO_URL
+          value: "minio:9000" #
+        - name: MINIO_ACCESS_KEY
+          value: "minioadmin"
+        - name: MINIO_SECRET_KEY
+          value: "minioadmin"
+        - name: CATALOG_SERVICE_HOST
+          value: "catalog-management"
+        - name: USER_SERVICE_HOST
+          value: "user-management"
+        - name: SECRET_KEY
+          value: "mysecretkey"

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-management
+  labels:
+    app: catalog-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-management
+  template:
+    metadata:
+      labels:
+        app: catalog-management
+    spec:
+      containers:
+      - name: catalog-management
+        image: yehudalinker/catalog_management:v1
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ELASTICSEARCH_URL
+          value: "http://elasticsearch:9200"
+        - name: MINIO_URL
+          value: "minio:9000"
+        - name: MINIO_ACCESS_KEY
+          value: "minioadmin"
+        - name: MINIO_SECRET_KEY
+          value: "minioadmin"
+        - name: SECRET_KEY
+          value: "mysecretkey"

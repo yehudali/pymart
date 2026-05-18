@@ -1,0 +1,10 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: store-front-route
+spec:
+  to:
+    kind: Service
+    name: store-front-service
+  port:
+    targetPort: 8501
