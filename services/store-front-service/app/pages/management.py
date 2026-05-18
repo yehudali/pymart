@@ -10,7 +10,7 @@ API_URL = f"http://{CATALOG_SERVICE_HOST}:8000/"
 SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
 token = cookie_manager.get(SECRET_KEY)
 st.info({"token":token})
-
+    
 st.title("הוספת מוצר-לאלסטיק")
 
 with st.form("product_form"):
