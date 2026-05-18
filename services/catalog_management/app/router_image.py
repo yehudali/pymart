@@ -1,6 +1,7 @@
 # setup api Endpoint
 from fastapi import APIRouter, HTTPException, UploadFile
-from minio_file import upload_image_to_minio
+from minio_file import upload_image_to_minio, get_image_from_minio
+from fastapi.responses import StreamingResponse
 
 router = APIRouter()
 
@@ -22,7 +23,21 @@ async def upload_image(file: UploadFile):
         raise HTTPException(status_code=500, detail="Failed to upload image")
 
 
-
+@router.get("/image/{product_name}", tags=["image"])
+async def get_image(product_name: str):
+    try:
+        image_stream, content_type = get_image_from_minio(product_name)
+ 
+        if not image_stream:
+            raise HTTPException(status_code=404, detail=f"Image '{product_name}' not found")
+ 
+        return StreamingResponse(image_stream, media_type=content_type)
+ 
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Failed to retrieve image")
 
 
 # # minio endpoints:

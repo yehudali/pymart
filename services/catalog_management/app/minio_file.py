@@ -33,3 +33,17 @@ def upload_image_to_minio(file: BinaryIO, file_name: str) -> bool:
     except Exception as err:
         print(f"Upload failed: {err}")
         return False
+
+
+
+def get_image_from_minio(product_name: str):
+    try:
+        response = client_boto3.get_object(Bucket=BUCKET_NAME, Key=product_name)
+        content_type = response["ContentType"]
+        return response["Body"], content_type
+    except ClientError as e:
+        if e.response["Error"]["Code"] == "NoSuchKey":
+            print(f"Image '{product_name}' not found in bucket")
+        else:
+            print(f"Failed to retrieve image: {e}")
+        return None, None
