@@ -9,9 +9,35 @@ API_URL = f"http://{CATALOG_SERVICE_HOST}:8000/"
 
 SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
 token = cookie_manager.get(SECRET_KEY)
-st.info({"token":token})
+if token:
+    st.sidebar.success("☑️סטטוס: מחובר")
+else:
+    st.sidebar.warning("❌סטטוס : לא מחובר כרגע")
+
+
+
+
+st.title("העלאת תמונה")
+
+with st.form("upload_image_form"):
+    uploaded_file = st.file_uploader("בחר קובץ PNG", type="png")
+    submit_button = st.form_submit_button("העלה תמונה")
+
+if submit_button and uploaded_file:
+    files = {"file": (uploaded_file.name, uploaded_file.getvalue())}
     
-st.title("הוספת מוצר-לאלסטיק")
+    response = requests.post(f"{API_URL}image", files=files,  cookies={SECRET_KEY: token})
+    
+    if response.status_code == 200:
+        st.success("התמונה הועלתה בהצלחה!")
+        st.json(response.json())
+    else:
+        st.error(f"נכשל בהעלאה: {response.status_code}")
+        st.write(response.text)
+
+
+
+st.title("הוספת מוצר")
 
 with st.form("product_form"):
     name = st.text_input("Name")
@@ -19,7 +45,6 @@ with st.form("product_form"):
     price = st.number_input("Price", min_value=0)
     category = st.text_input("Category")
     stock_count = st.number_input("Stock Count", min_value=0)
-    image_url = st.text_input("Image URL")
     
     submit_button = st.form_submit_button("Add Product")
 
@@ -30,7 +55,7 @@ if submit_button:
         "price": price,
         "category": category,
         "stock_count": stock_count,
-        "image_url": image_url
+        "image_url": "" #or nune
     }
     
     response = requests.post(f"{API_URL}product/", json=payload, cookies={SECRET_KEY: token})
@@ -45,7 +70,7 @@ if submit_button:
 
 
 
-st.title("מחיקת מוצר מאלסטיק")
+st.title("מחיקת מוצר מהמערכת")
 
 with st.form("delete_product"):
     product_id = st.text_input("הכנס ID:")
@@ -70,7 +95,7 @@ if submit_button:
 
 #######
 
-st.title("עדכון מוצר באלסטיק")
+st.title("עדכון מוצר במערכת")
 
 with st.form("update_product"):
     product_id = st.text_input("id")
@@ -109,10 +134,6 @@ if submit_button:
 
 
 
-
-
-
-
 st.title("שליפת מוצר  לפי ID")
 
 with st.form("get_product_form"):
@@ -134,22 +155,3 @@ if submit_button:
             st.write(response.text)
     else:
         st.warning("נדרש ID ")
-
-
-st.title("העלאת תמונה")
-
-with st.form("upload_image_form"):
-    uploaded_file = st.file_uploader("בחר קובץ PNG", type="png")
-    submit_button = st.form_submit_button("העלה תמונה")
-
-if submit_button and uploaded_file:
-    files = {"file": (uploaded_file.name, uploaded_file.getvalue())}
-    
-    response = requests.post(f"{API_URL}image", files=files,  cookies={SECRET_KEY: token})
-    
-    if response.status_code == 200:
-        st.success("התמונה הועלתה בהצלחה!")
-        st.json(response.json())
-    else:
-        st.error(f"נכשל בהעלאה: {response.status_code}")
-        st.write(response.text)

@@ -49,7 +49,7 @@ async def get_product_from_elastic_by_id(id, token = Depends(checking_basic_user
     
 
 @router.get("/product/", tags=fastapi_order_tag, response_model=List[ResponseProduce]) # type: ignore
-async def get_all_product_from_elastic(token = Depends(checking_basic_user_permissions)):
+async def get_all_product_from_elastic():
     try:
         product_info = get_all_products()
         products_hits = product_info["hits"]["hits"]

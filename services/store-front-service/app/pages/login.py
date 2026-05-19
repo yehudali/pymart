@@ -9,38 +9,14 @@ API_URL = f"http://{USER_SERVICE_HOST}:8001/"
 
 SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
 token = cookie_manager.get(SECRET_KEY)
-
-st.title("צור משתמש")
-with st.form("create_user_form"):
-    name = st.text_input("Name")
-    email = st.text_input("Email")
-    password = st.text_input("Password")
-    is_manager = st.checkbox("Is Manager?")
-    address = st.text_input("Address")
-    
-    submit_button = st.form_submit_button("צור משתמש")
-
-if submit_button:
-    payload = {
-        "name": name,
-        "email": email,
-        "password": password,
-        "is_manager": is_manager,
-        "address": address
-    }
-    
-    response = requests.post(f"{API_URL}user", json=payload, cookies={SECRET_KEY: token})
-    
-    if response.status_code == 200:
-        st.success(f"המשתמש {payload['name']} נוצר בהצלחה!")
-        st.json(response.json())
-    else:
-        st.error(f"נכשל: {response.status_code}")
-        st.write(response.text)
+if token:
+    st.sidebar.success("☑️סטטוס: מחובר")
+else:
+    st.sidebar.warning("❌סטטוס: לא מחובר כרגע")
 
 
-st.title("התחברות (Login)")
 
+st.title("התחברות")
 
 with st.form("login_form"):
     email = st.text_input("Email")
@@ -71,4 +47,31 @@ if submit_button:
             st.write(response.text)
 
 
+st.title("הרשמה")
+with st.form("create_user_form"):
+    name = st.text_input("Name")
+    email = st.text_input("Email")
+    password = st.text_input("Password")
+    is_manager = st.checkbox("Is Manager?")
+    address = st.text_input("Address")
+    
+    submit_button = st.form_submit_button("צור משתמש")
+
+if submit_button:
+    payload = {
+        "name": name,
+        "email": email,
+        "password": password,
+        "is_manager": is_manager,
+        "address": address
+    }
+    
+    response = requests.post(f"{API_URL}user", json=payload, cookies={SECRET_KEY: token})
+    
+    if response.status_code == 200:
+        st.success(f"המשתמש {payload['name']} נוצר בהצלחה!")
+        st.json(response.json())
+    else:
+        st.error(f"נכשל: {response.status_code}")
+        st.write(response.text)
 
