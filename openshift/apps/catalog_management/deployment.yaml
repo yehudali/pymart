@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: catalog-management
-        image: yehudalinker/catalog_management:v1
+        image: yehudalinker/catalog_management:v2.0.0
         ports:
         - containerPort: 8000
         env:

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: store-front-service
-        image: yehudalinker/store-front-service:v1
+        image: yehudalinker/store-front-service:v2.0.1
         ports:
         - containerPort: 8501
         env:
