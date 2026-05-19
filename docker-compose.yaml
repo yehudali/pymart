@@ -57,6 +57,24 @@ services:
       retries: 5
     command: ["redis-server"]
 
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: yehuda
+      RABBITMQ_DEFAULT_PASS: yehuda
+    configs:
+      - source: rabbitmq-plugins
+        target: /etc/rabbitmq/enabled_plugins
+    volumes:
+      - rabbitmq-lib:/var/lib/rabbitmq/
+      - rabbitmq-log:/var/log/rabbitmq
+
+
   catalog_management:
     container_name: catalog_management
     build:
@@ -134,8 +152,18 @@ services:
       - ELASTICSEARCH_PORT=9200
       - SECRET_KEY=mysecretkey # חשוב להפיץ בין הסרוויסים
 
-  
+configs:
+  rabbitmq-plugins:
+    content: "[rabbitmq_management]."  
+
+
 volumes:
   elasticsearch_data:
   minio_data:
   redis_data:
+  rabbitmq-lib:
+    driver: local
+  rabbitmq-log:
+    driver: local
+
+  
