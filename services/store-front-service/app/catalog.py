@@ -32,7 +32,6 @@ def render_product(product):
 
 def main():
     if token:
-        st.warning(token)
         st.sidebar.success("☑️סטטוס: מחובר")
     if token == None:
         st.sidebar.warning("❌סטטוס: לא מחובר כרגע")
