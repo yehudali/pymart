@@ -41,7 +41,22 @@ services:
       - "9001:9001" # עבור ממשק המשתמש (UI)
     volumes:
       - minio_data:/data
-  
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    command: ["redis-server"]
+
   catalog_management:
     container_name: catalog_management
     build:
@@ -123,3 +138,4 @@ services:
 volumes:
   elasticsearch_data:
   minio_data:
+  redis_data:
