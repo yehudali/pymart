@@ -36,11 +36,10 @@ services:
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
-    # התיקון כאן: הוספנו את הכתובת ל-console
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000" # עבור API / S3 requests
-      - "9001:9001" # עבור ממשק המשתמש (UI)
+      - "9000:9000"
+      - "9001:9001" 
     volumes:
       - minio_data:/data
 
