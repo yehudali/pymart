@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager 
 import redis
-from app.routes.mmm import router
+from app.routes.example_router import router
 
 def lifespan(app: FastAPI):
-    app.state.redis_client = redis.Redis()
+    app.state.redis_client = redis.Redis(host='localhost',port= 6379)
 
     yield
 
