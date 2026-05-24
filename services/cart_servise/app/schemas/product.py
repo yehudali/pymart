@@ -11,3 +11,15 @@ class AddProductToCart(BaseModel):
     id:str
     name:str
     price:float
+    quantity:int
+    
+
+class DeleteProduct(BaseModel):
+    # מבנה בקשה מהמשתמש למחיקה של מוצר מהעגלה
+    id:str
+
+
+class UpdateQuantityProduct(BaseModel):
+    '''כשמשתמש מעוניין לעדכן כמות מוצר בעגלה'''
+    prduct_id:str
+    Quantity:int 
