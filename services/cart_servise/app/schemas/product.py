@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from dataclasses import dataclass
 
 class AddProductToCart(BaseModel):
     '''
@@ -23,3 +23,16 @@ class UpdateQuantityProduct(BaseModel):
     '''כשמשתמש מעוניין לעדכן כמות מוצר בעגלה'''
     prduct_id:str
     Quantity:int 
+
+
+
+
+@dataclass
+class CreateItemDTO:
+    """
+    מבנה המידע שנשמר בואליו של המוצר ברדיס
+    save_product_in_cart(user_id:str, product_id:str, product_data:CreateItemDTO
+    """
+    name:str
+    price:float
+    quantity:int

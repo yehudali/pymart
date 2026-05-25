@@ -1,6 +1,6 @@
-import redis 
+import redis.asyncio 
 from fastapi import Request
 
 
-def get_redis_client(request: Request) -> redis.Redis:
-    return request.app.state.redis_client
+async def get_redis_client(request: Request) -> redis.asyncio.Redis:
+    return await request.app.state.redis_client
