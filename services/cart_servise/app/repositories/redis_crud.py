@@ -49,7 +49,7 @@ async def update_product_quantity(user_id:str, product_id:str, quantity:int, red
     except Exception as e:
         raise ValueError(e)
     
-    async with redis_client.pipeline() as pipe:
+    async with redis_client.pipeline() as pipe: # type: ignore
         pipe.hset(name=user_id, key=product_id, value=product_data_str)
         pipe.expire(name=user_id, time=86000)
 
