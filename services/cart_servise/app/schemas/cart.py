@@ -1,3 +1,4 @@
+from typing import Dict
 from pydantic import BaseModel
 
 class product(BaseModel):
@@ -21,6 +22,15 @@ class cart(BaseModel):
 #     stock_count:int = Field(ge=0)
 #     image_url:Optional[str] = None
 
+class ProductData(BaseModel):
+    name:str
+    price:float
+    quantity:int
+
+class CartInfoResponse(BaseModel):
+    sum_products:int
+    cart_amount:float
+    product:Dict[str,ProductData]
 
 
 

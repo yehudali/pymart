@@ -20,6 +20,42 @@ async def save_product_in_cart(user_id:str, product_id:str, product_data:CreateI
         return asdict(product_data)
     
 
+async def get_all_product(user_id:str, redis_client:redis.Redis)-> dict[str,CreateItemDTO]:
+    redis_res = await redis_client.hgetall(name=user_id) # type: ignore
+
+    product_dict = {}
+    for key, value in redis_res.items():
+        try:
+            data = json.loads(value)
+            product_dict[key] = CreateItemDTO(name=data["name"], price=data["price"], quantity=data["quantity"])
+        except json.JSONDecodeError as err:
+            print(f"error: {err}")
+            continue
+        except Exception as err:
+            print(f"error: {err}")
+            continue
+        
+    return product_dict # --->
+"""
+{
+  "kjkjkjkjk": {
+    "name": "tapuz",
+    "price": 3,
+    "quantity": 87
+  },
+  "jjjjjjjjj": {
+    "name": "avokado",
+    "price": 3.9,
+    "quantity": 80
+  },
+  "mmmmmmmm": {
+    "name": "mismash",
+    "price": 5.9,
+    "quantity": 29
+  }
+}
+"""
+
 async def product_exists(user_id:str, product_id:str, redis_client:redis.Redis)->bool:
     return await redis_client.hexists(name=user_id, key=product_id) # type: ignore
 
