@@ -21,8 +21,8 @@ class DeleteProduct(BaseModel):
 
 class UpdateQuantityProduct(BaseModel):
     '''כשמשתמש מעוניין לעדכן כמות מוצר בעגלה'''
-    prduct_id:str
-    Quantity:int 
+    product_id:str
+    quantity:int 
 
 
 
