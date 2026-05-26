@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager 
 import redis.asyncio
-from app.routes.example_router import router
+from app.routes.cart_router import router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

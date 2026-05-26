@@ -17,6 +17,7 @@ async def healthcheck_test(redis_client:redis.Redis = Depends(get_redis_client))
 
 @router.post("/cart/product")
 async def add_product_to_cart(product:AddProductToCart, user_id=Depends(checking_basic_user_permissions), redis_client:redis.Redis = Depends(get_redis_client)):
+    """ נדרש ליצור חיבור לאלסטיק, בכדי לוודאות לפני ההוספה שהמוצר לא קיים"""
     try:
         product_data = CreateItemDTO(name=product.name, price=product.price, quantity=product.quantity)
         return await add_or_update_product_to_user_cart(user_id=user_id, product_id=product.id, data=product_data, redis_client=redis_client)

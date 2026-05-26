@@ -6,7 +6,7 @@ async def add_or_update_product_to_user_cart(user_id:str, product_id:str, data:C
     """מוסיף מוצר ואם קיים מעדכן את המוצר לעגלה
     צריך לבדוק אם המוצר קיים בסרוויס של הקטלוג, ואם לא להחזיר שגיאה
     """
-    ## בדיקה מול הסרוויס של הקטלוג
+    ## TODO בדיקה מול הסרוויס של הקטלוג
     res = await product_exists(user_id=user_id, product_id=product_id, redis_client=redis_client)
     if not res:
         return await save_product_in_cart(user_id=user_id, product_id=product_id, product_data=data, redis_client=redis_client)

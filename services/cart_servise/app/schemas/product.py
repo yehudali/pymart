@@ -25,8 +25,6 @@ class UpdateQuantityProduct(BaseModel):
     quantity:int 
 
 
-
-
 @dataclass
 class CreateItemDTO:
     """
