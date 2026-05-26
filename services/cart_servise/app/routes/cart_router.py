@@ -1,9 +1,11 @@
+from elasticsearch import AsyncElasticsearch
 import redis.asyncio as redis
 from fastapi import APIRouter, Depends, HTTPException
 
 # from app.repositories.redis_crud import get_item
-from app.service.service import add_or_update_product_to_user_cart,delete_product_from_cart1, delete_cart1, update_quantity1, get_cart_product_and_information
+from app.service.service import add_or_update_product_to_user_cart,delete_product_from_cart1, delete_cart1, update_quantity1, get_cart_product_and_information, is_product_exists_in_catalog
 from app.core.redis_client import get_redis_client
+from app.core.elasticsearch_client import get_elastic_client
 from app.core.security import checking_basic_user_permissions
 from app.schemas.product import AddProductToCart, DeleteProduct, UpdateQuantityProduct, CreateItemDTO
 from app.schemas.cart import CartInfoResponse
@@ -16,8 +18,18 @@ async def healthcheck_test(redis_client:redis.Redis = Depends(get_redis_client))
 
 
 @router.post("/cart/product")
-async def add_product_to_cart(product:AddProductToCart, user_id=Depends(checking_basic_user_permissions), redis_client:redis.Redis = Depends(get_redis_client)):
-    """ נדרש ליצור חיבור לאלסטיק, בכדי לוודאות לפני ההוספה שהמוצר לא קיים"""
+async def add_product_to_cart(product:AddProductToCart, elastic_client:AsyncElasticsearch = Depends(get_elastic_client),user_id=Depends(checking_basic_user_permissions), redis_client:redis.Redis = Depends(get_redis_client)):
+
+    """ בדיקה וחיבור לאלסטיק, בכדי לוודאות לפני ההוספה שהמוצר קיים בקטלוג    """
+    try:
+        product_exists = await is_product_exists_in_catalog(product_id=product.id, elastic_client=elastic_client)
+        if not product_exists:
+            raise HTTPException(status_code=404, detail="product not found in the catalog!")
+    except Exception as err:
+        print(f"error: {err}")
+        raise HTTPException(status_code=404, detail="error while checking product in the catalog, show logs")
+    
+    """הוספה או עדכון של מוצר בעגלה, במידה והמוצר כבר קיים בעגלה, הוא יעודכן עם הכמות החדשה"""
     try:
         product_data = CreateItemDTO(name=product.name, price=product.price, quantity=product.quantity)
         return await add_or_update_product_to_user_cart(user_id=user_id, product_id=product.id, data=product_data, redis_client=redis_client)

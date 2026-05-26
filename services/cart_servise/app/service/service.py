@@ -1,12 +1,15 @@
 from app.schemas.product import CreateItemDTO
 from app.repositories.redis_crud import  product_exists, save_product_in_cart, update_product_quantity, delete_product_from_cart, delete_cart, get_all_product
+from app.repositories.elastic_crud import is_product_exists_in_elastic
 import redis.asyncio
+from elasticsearch import AsyncElasticsearch
+
+async def is_product_exists_in_catalog(product_id:str, elastic_client: AsyncElasticsearch):
+    """פונקצית עזר לבדיקה האם המוצר קיים- באלסטיק, לפני שמוסיפים אותו לעגלה"""
+    return await is_product_exists_in_elastic(product_id=product_id, elastic_client=elastic_client)
 
 async def add_or_update_product_to_user_cart(user_id:str, product_id:str, data:CreateItemDTO, redis_client:redis.asyncio.Redis):
-    """מוסיף מוצר ואם קיים מעדכן את המוצר לעגלה
-    צריך לבדוק אם המוצר קיים בסרוויס של הקטלוג, ואם לא להחזיר שגיאה
-    """
-    ## TODO בדיקה מול הסרוויס של הקטלוג
+    """מוסיף מוצר ואם קיים מעדכן את המוצר לעגלה"""
     res = await product_exists(user_id=user_id, product_id=product_id, redis_client=redis_client)
     if not res:
         return await save_product_in_cart(user_id=user_id, product_id=product_id, product_data=data, redis_client=redis_client)
