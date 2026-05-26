@@ -152,6 +152,29 @@ services:
       - ELASTICSEARCH_HOST=elasticsearch
       - ELASTICSEARCH_PORT=9200
       - SECRET_KEY=mysecretkey # חשוב להפיץ בין הסרוויסים
+  
+  cart-service:
+    container_name: cart-service
+    build:
+      context: ./
+      dockerfile: ./services/cart_servise/Dockerfile
+    ports:
+      - "8003:8003"
+
+    volumes:
+      - ./:/WORKDIR
+    environment:
+      - key=value
+      - SECRET_KEY=mysecretkey
+      # לשימוש בהמשך..... TODO
+      # - ELASTICSEARCH_HOST=elasticsearch
+      # - ELASTICSEARCH_PORT=9200
+      # - REDIS_HOST=redis
+      # - REDIS_PORT=6379
+      
+    depends_on:
+      - elasticsearch
+      - redis  
 
 configs:
   rabbitmq-plugins:

@@ -29,7 +29,7 @@ async def add_product_to_cart(product:AddProductToCart, elastic_client:AsyncElas
         print(f"error: {err}")
         raise HTTPException(status_code=404, detail="error while checking product in the catalog, show logs")
     
-    """הוספה או עדכון של מוצר בעגלה, במידה והמוצר כבר קיים בעגלה, הוא יעודכן עם הכמות החדשה"""
+    """הוספה או עדכון של מוצר בעגלה, במידה והמוצר כבר קיים בעגלה, הוא יעודכן עם הכמות החדשה בלבד! בלי עדכון מחיר שם.. וכדומה"""
     try:
         product_data = CreateItemDTO(name=product.name, price=product.price, quantity=product.quantity)
         return await add_or_update_product_to_user_cart(user_id=user_id, product_id=product.id, data=product_data, redis_client=redis_client)

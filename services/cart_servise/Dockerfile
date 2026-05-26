@@ -1,7 +1,10 @@
-FROM python:3.8-slim
-# WORKDIR /WORKDIR
-# COPY ./services/user-management/requirements.txt .
-# RUN pip install --no-cache-dir -r requirements.txt
-# COPY . .
-# EXPOSE 8001
-# ENTRYPOINT ["python", "app/main.py"]
+# שימוש בפייתון מתקדם משאר הסרוויסים!
+FROM python:3.11-slim
+
+WORKDIR /WORKDIR
+COPY ./services/cart_servise/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+WORKDIR /WORKDIR/services/cart_servise
+EXPOSE 8003
+ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8003"]
