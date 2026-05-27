@@ -2,6 +2,8 @@ data
 tester.py
 postman
 .postman
+tasks.txt
+test.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
