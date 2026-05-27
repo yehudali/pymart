@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 WORKDIR /WORKDIR/services/cart_servise
 EXPOSE 8003
-ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8003"]
+ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8003", "--reload"]
