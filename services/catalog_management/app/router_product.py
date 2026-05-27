@@ -1,7 +1,7 @@
 # setup api Endpoint
 from typing import List
 from fastapi import APIRouter, HTTPException, UploadFile, Depends, Header, Request
-from schemas import InsertProduct, ResponseProduce, UpdateProduct
+from schemas import InsertProduct, OrderItemIncoming, ResponseProduce, UpdateProduct
 from elasticsearch_file import add_new_product, get_all_products, update_product, delete_product, get_product_by_id, get_product_by_name
 
 from security import checking_basic_user_permissions,check_if_is_admin_user, SECRET_KEY
@@ -58,3 +58,41 @@ async def get_all_product_from_elastic():
         print(e)
         return []
 
+@router.post("/create_order", tags=['orders'])
+async def process_new_order(
+    order_items: List[OrderItemIncoming], 
+    token = Depends(checking_basic_user_permissions)
+):
+    """
+    מקבל רשימה של מוצרים וכמויות. 
+    בודק מלאי עבור כולם, ורק אם יש מספיק לכולם, מעדכן את המלאי.
+    """
+    products_to_update = []
+
+    for item in order_items:
+        product_data = get_product_by_id(item.product_id)
+        
+        if not product_data:
+            raise HTTPException(status_code=404, detail=f"Product {item.product_id} not found")
+        
+        current_stock = product_data.get("_source", {}).get("stock_count", 0)
+        
+        if current_stock < item.quantity:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"there is not enough stock for product {item.product_id}"
+            )
+        # שמירה בליסט לצורך עדכון בשלב הבא
+        products_to_update.append({
+            "id": item.product_id,
+            "new_stock": current_stock - item.quantity
+        })
+    # ==========================================
+    # עדכון מלאי
+    for prod in products_to_update:
+        update_data = UpdateProduct(stock_count= prod["new_stock"])
+        
+        update_product(
+            product=update_data.model_dump(exclude_unset=True), product_id=prod["id"])
+
+    return {"success": True, "message": "Order validated and stock updated"}

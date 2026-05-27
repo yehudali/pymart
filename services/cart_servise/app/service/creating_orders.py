@@ -14,7 +14,7 @@ async def create_order_service(user_id: str, redis_client: redis.asyncio.Redis) 
     if not products_data:
         raise ValueError("Cart is empty, cannot create order") 
     
-    #  יצירת רשימת טאפלים שמכילה את המוצרים-והכמות, שהלקוח דורש
+    #  יצירת רשימה לשליחה לסרוויס של ניהול קטלוג
     payload = [
         OrderItem(product_id=pid, quantity=item.quantity).model_dump() 
         for pid, item in products_data.items()
@@ -22,7 +22,12 @@ async def create_order_service(user_id: str, redis_client: redis.asyncio.Redis) 
 
     # העברה לסרוויס ניהול קטלוג לבדיקה (ועדכון אם קיימים כל המוצרים) יחזיר תגובה בוליאנית 
     try:
+        # 1. הקריאה  לקטלוג לוודא מלאי ולעדכן
         await send_order_to_catalog(payload)
+        
+        # 2. אם לא היתה שגיאה עד כה, פרסום האירוע בתור של ההזמנות
+        # await publish_order_event(topic="order.created", payload=payload) # TODO: לממש מול המסג' ברוקר הנבחר
+
         return True
     except httpx.HTTPStatusError as e:
         raise RuntimeError(f"Catalog service error: {e.response.text}")
