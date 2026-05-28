@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
-from app.security import checking_basic_user_permissions
+from security import checking_basic_user_permissions
 from schemas import OrderItemIncoming, UpdateProduct
 from elasticsearch_file import get_product_by_id, update_product
 
