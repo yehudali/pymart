@@ -8,7 +8,7 @@ from app.schemas.order import OrderItem
 
 
 async def create_order_service(user_id: str, redis_client: redis.asyncio.Redis) -> bool:
-    # שלב א': הבאת נתונים
+    # שלב א': הבאת נתוני המוצרים שבעגלה-מרדיס
     products_data = await get_all_product(user_id=user_id, redis_client=redis_client)
     
     if not products_data:
