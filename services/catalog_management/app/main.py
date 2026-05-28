@@ -13,7 +13,7 @@ async def lifespan(app:FastAPI):
     yield
     print("dhe app is shutting down...")
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, debug=True, title="Catalog Management Service API", description="API for managing product catalog, including product details, images, and inventory")
 
 
 app.include_router(route_healthcheck.router)
