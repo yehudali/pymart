@@ -6,7 +6,7 @@ from fastapi.responses import StreamingResponse
 router = APIRouter()
 
 #images managment:
-@router.post("/image", tags=["image"])
+@router.post("/image", tags=["catalog_image"])
 async def upload_image(file: UploadFile):
     try:
         is_uploaded = upload_image_to_minio(file.file, file.filename) # type: ignore
