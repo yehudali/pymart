@@ -7,11 +7,11 @@ from app.service.creating_orders import create_order_service
 
 router = APIRouter()
 
-@router.post("/create_order", tags=["orders"])
-async def create_order(user_id: str = Depends(checking_basic_user_permissions), redis_client = Depends(get_redis_client)):
+@router.post("/create_order/{user_id}", tags=["orders"])
+async def create_order(user_id: str, redis_client = Depends(get_redis_client)):
     try:
         await create_order_service(user_id=user_id, redis_client=redis_client) 
-        return {"success": True, "message": "Order created successfully"}
+        return {"success": True, "message": "order created successfully"}
         
     except ValueError as err:
         raise HTTPException(status_code=400, detail=str(err))
