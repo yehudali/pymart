@@ -1,7 +1,6 @@
 # pydantic moduls
 from pydantic import BaseModel, Field
 from typing import Optional
-from dataclasses import dataclass
 
 
 class InsertProduct(BaseModel):
@@ -35,3 +34,9 @@ class ResponseProduce(BaseModel):
     # id: int
     id: str = Field(alias="_id")
     source: Source = Field(alias="_source")
+
+
+# קבלת מוצרים מסרויס עגלה לצורך בדיקת מלאי
+class OrderItemIncoming(BaseModel):
+    product_id: str
+    quantity: int
