@@ -9,8 +9,7 @@ router = APIRouter()
 
 @router.post("/create_order", tags=['order_process'])
 async def inventory_checking_and_updating_process_for_the_purpose_of_placing_an_order(
-    order_items: List[OrderItemIncoming], 
-    token = Depends(checking_basic_user_permissions)
+    order_items: List[OrderItemIncoming]
 ):
     """
     מקבל רשימה של מוצרים וכמויות. 
