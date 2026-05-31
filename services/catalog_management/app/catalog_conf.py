@@ -1,4 +1,3 @@
-from pydantic import ConfigDict
 import os
 
 class ElasticSettings():

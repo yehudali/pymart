@@ -1,7 +1,6 @@
 # pydantic moduls
 from pydantic import BaseModel, Field
 from typing import Optional
-from dataclasses import dataclass
 
 
 class InsertProduct(BaseModel):

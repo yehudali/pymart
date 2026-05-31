@@ -1,7 +1,5 @@
 # setup api Endpoint
-from typing import List
 from fastapi import APIRouter, HTTPException, UploadFile
-from elasticsearch_file import add_new_product, get_all_products, update_product, delete_product, get_product_by_id, get_product_by_name
 from elasticsearch_file import elasticsearch_helthchack
 
 router = APIRouter()

@@ -3,9 +3,6 @@ import json
 from dataclasses import dataclass, asdict
 from app.schemas.product import CreateItemDTO
 
-# async def get_items(redis_client: redis.Redis, name):
-#     return redis_client.get(name=name)
-
 
 async def save_product_in_cart(user_id:str, product_id:str, product_data:CreateItemDTO, redis_client: redis.Redis):
 
@@ -35,26 +32,8 @@ async def get_all_product(user_id:str, redis_client:redis.Redis)-> dict[str,Crea
             print(f"error: {err}")
             continue
         
-    return product_dict # --->
-"""
-{
-  "kjkjkjkjk": {
-    "name": "tapuz",
-    "price": 3,
-    "quantity": 87
-  },
-  "jjjjjjjjj": {
-    "name": "avokado",
-    "price": 3.9,
-    "quantity": 80
-  },
-  "mmmmmmmm": {
-    "name": "mismash",
-    "price": 5.9,
-    "quantity": 29
-  }
-}
-"""
+    return product_dict 
+
 
 async def product_exists(user_id:str, product_id:str, redis_client:redis.Redis)->bool:
     return await redis_client.hexists(name=user_id, key=product_id) # type: ignore
