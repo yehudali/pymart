@@ -7,7 +7,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
 
 
 # בדיקת הטוקן
-# פונקציות זהות שצריכות להיות משותפות בין  2  סרוויסים
+# פונקציות זהות שצריכות להיות משותפות בין  סרוויסים
 def get_user_id_from_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
@@ -60,7 +60,7 @@ def check_if_is_admin_user(
         raise HTTPException(status_code=401, detail="Unauthorized not token")
 
     is_manager = check_administrator_by_token(token)
-    if is_manager:
+    if is_manager == True:
         return True
     else:
         raise HTTPException(
