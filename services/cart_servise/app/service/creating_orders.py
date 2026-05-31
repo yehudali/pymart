@@ -7,28 +7,26 @@ from app.schemas.product import CreateItemDTO
 from app.schemas.order import OrderItem 
 
 
-async def create_order_service(user_id: str, redis_client: redis.asyncio.Redis) -> bool:
+async def create_order_service(user_id: str, redis_client: redis.asyncio.Redis) -> dict[str, CreateItemDTO] :
     # שלב א': הבאת נתוני המוצרים שבעגלה-מרדיס
-    products_data = await get_all_product(user_id=user_id, redis_client=redis_client)
+    cart = await get_all_product(user_id=user_id, redis_client=redis_client)
     
-    if not products_data:
+    if not cart:
         raise ValueError("Cart is empty, cannot create order") 
     
     #  יצירת רשימה לשליחה לסרוויס של ניהול קטלוג
     payload = [
         OrderItem(product_id=pid, quantity=item.quantity).model_dump() 
-        for pid, item in products_data.items()
+        for pid, item in cart.items()
     ]
 
     # העברה לסרוויס ניהול קטלוג לבדיקה (ועדכון אם קיימים כל המוצרים) יחזיר תגובה בוליאנית 
     try:
         # 1. הקריאה  לקטלוג לוודא מלאי ולעדכן
         await send_order_to_catalog(payload)
-        
-        # 2. אם לא היתה שגיאה עד כה, פרסום האירוע בתור של ההזמנות
-        # await publish_order_event(topic="order.created", payload=payload) # TODO: לממש מול המסג' ברוקר הנבחר
-
-        return True
+        # החזרה של המוצרים בעגלה עם המידע שלהם לסרוויס הזמנות כדי שיצור הזמנה בדאטה בייס וברביט
+        return cart
+    
     except httpx.HTTPStatusError as e:
         raise RuntimeError(f"Catalog service error: {e.response.text}")
     except Exception as e:
