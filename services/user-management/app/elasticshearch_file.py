@@ -6,7 +6,7 @@ class ElasticsearchClient:
 
 
 # Initialize Elasticsearch client
-host = os.getenv("ELASTICSEARCH_HOST")
+host = os.getenv("ELASTICSEARCH_HOST", "elasticsearch")
 port = int(os.getenv("ELASTICSEARCH_PORT", 9200))
 elasic_instance = ElasticsearchClient(host=host, port=port)
 
