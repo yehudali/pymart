@@ -1,15 +1,15 @@
 from fastapi import FastAPI
-from contextlib import asynccontextmanager 
-import redis.asyncio
+from contextlib import asynccontextmanager
 from elasticsearch import AsyncElasticsearch
+from app.core.config import settings
 from app.routes.order_process import router as order_process_router
 
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # TODO הוצאת ההוסטים והפורטים למשתני סביבה שיתאימו להרצה בסביבות נוספות
-    app.state.elastic_client = AsyncElasticsearch("http://elasticsearch:9200")
+    
+    app.state.elastic_client = AsyncElasticsearch(settings.elasticsearch_url)
     
     yield
 
