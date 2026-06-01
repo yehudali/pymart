@@ -5,9 +5,10 @@ from schemas import InsertProduct, ResponseProduce, UpdateProduct
 from elasticsearch_file import (
     add_new_product,
     get_all_products,
+    get_product_by_name,
     update_product,
     delete_product,
-    get_product_by_id
+    get_product_by_id,
 )
 
 from security import checking_basic_user_permissions, check_if_is_admin_user, SECRET_KEY
@@ -58,6 +59,17 @@ async def get_product_from_catalog_by_id(
         raise HTTPException(status_code=404, detail="product not found in catalog")
     else:
         return respons
+
+
+@router.get("/product/name/{name}", tags=fastapi_order_tag)  # type: ignore
+async def get_product_from_catalog_by_name(
+    name, token=Depends(checking_basic_user_permissions)
+):
+    response = get_product_by_name(name)
+    if not response:
+        raise HTTPException(status_code=404, detail="product not found in catalog")
+    else:
+        return response
 
 
 @router.get("/product/", tags=fastapi_order_tag, response_model=List[ResponseProduce])  # type: ignore
