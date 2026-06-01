@@ -6,8 +6,8 @@ from app.schemas.order import Order
 
 router = APIRouter()
 
-@router.post("/create_order/{user_id}", tags=["orders"])
-async def create_new_order(user_id: str):
+@router.post("/create_order", tags=["orders"])
+async def create_new_order(user_id=Depends(checking_basic_user_permissions)):
     try:
         cart = await send_request_to_cart_management_service(user_id=user_id)
         new_order = Order(
