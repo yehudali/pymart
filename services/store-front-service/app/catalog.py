@@ -10,11 +10,13 @@ MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 CATALOG_SERVICE_URL = os.getenv("CATALOG_SERVICE_URL", "http://catalog_management:8000")
 CART_SERVICE_URL = os.getenv("CART_SERVICE_URL", "http://cart-service:8003")
 
+st.set_page_config(page_title="Pymart", page_icon="🏰", layout="wide")
+
 cookie_manager = stx.CookieManager()
 SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
 token = cookie_manager.get(SECRET_KEY)
 
-COLS = 4  ## מספר המוצרים בכל שורה
+COLS = 3  ## מספר המוצרים בכל שורה
 
 
 def search_by_name():
@@ -80,7 +82,7 @@ def show_product_dialog(product):
         stock = product_src.get("stock_count", 0)
         st.metric("מלאי", "✅ במלאי" if stock > 0 else "❌ אזל")
 
-    st.markdown(f"**📝 תיאור:** {product_src.get('description', 'אין תיאור')}")
+    st.markdown(f"** תיאור:** {product_src.get('description', 'אין תיאור')}")
 
     st.divider()
 
@@ -157,7 +159,7 @@ def main():
     if token is None:
         st.sidebar.warning("❌סטטוס: לא מחובר כרגע")
 
-    st.title("pymart 🏰⚡☁️")
+    st.title("pymart")
 
     # שליפת כל המוצרים מהקטלוג
     try:

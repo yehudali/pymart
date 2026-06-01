@@ -34,7 +34,7 @@ def main():
         st.warning("יש להתחבר כדי לגשת לדף זה")
         return
 
-    st.title("🏭 ניהול מלאי")
+    st.title("ניהול מלאי")
 
     products = get_all_products()
 
