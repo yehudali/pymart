@@ -39,7 +39,7 @@ st.title("הוספת מוצר")
 with st.form("product_form"):
     name = st.text_input("Name")
     description = st.text_area("Description")
-    price = st.number_input("Price", min_value=0)
+    price = st.number_input("price", min_value=0.0, value=0.0, step=0.01)
     category = st.text_input("Category")
     stock_count = st.number_input("Stock Count", min_value=0)
 
