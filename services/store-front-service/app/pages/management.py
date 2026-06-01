@@ -15,8 +15,6 @@ else:
     st.sidebar.warning("❌סטטוס : לא מחובר כרגע")
 
 
-
-
 st.title("העלאת תמונה")
 
 with st.form("upload_image_form"):
@@ -36,7 +34,6 @@ if submit_button and uploaded_file:
         st.write(response.text)
 
 
-
 st.title("הוספת מוצר")
 
 with st.form("product_form"):
@@ -45,7 +42,7 @@ with st.form("product_form"):
     price = st.number_input("Price", min_value=0)
     category = st.text_input("Category")
     stock_count = st.number_input("Stock Count", min_value=0)
-    
+
     submit_button = st.form_submit_button("Add Product")
 
 if submit_button:
@@ -55,7 +52,7 @@ if submit_button:
         "price": price,
         "category": category,
         "stock_count": stock_count,
-        "image_url": "" #or nune
+        "image_url": "",  # or nune
     }
     
     response = requests.post(f"{API_URL}product/", json=payload, cookies={SECRET_KEY: token})
@@ -69,28 +66,24 @@ if submit_button:
         st.write(response.text)
 
 
-
 st.title("מחיקת מוצר מהמערכת")
 
 with st.form("delete_product"):
     product_id = st.text_input("הכנס ID:")
-    
 
     submit_button = st.form_submit_button("מחק מוצר")
 
 if submit_button:
-
     delete_url = f"{API_URL}product/{product_id}"
-    
+
     response = requests.delete(delete_url, cookies={SECRET_KEY: token})
-    
+
     if response.status_code == 200:
         st.success("המוצר נמחק בהצלחה!")
         st.json(response.json())
     else:
         st.error(f"נכשל במחיקה?: {response.status_code}")
         st.write(response.text)
-
 
 
 #######
@@ -101,11 +94,11 @@ with st.form("update_product"):
     product_id = st.text_input("id")
     name = st.text_input("name")
     description = st.text_area("description")
-    price = st.number_input("price")
+    price_update = st.number_input("price", min_value=0.0, value=0.0, step=0.01)
     category = st.text_input("category")
-    stock_count = st.number_input("stock Count")
+    stock_count = st.number_input("stock Count", value=0, step=1)
     image_url = st.text_input("image URL")
-    
+
     submit_button = st.form_submit_button("עדכן מוצר")
 
 if submit_button:
@@ -113,15 +106,15 @@ if submit_button:
         payload = {
             "name": name,
             "description": description,
-            "price": price,
+            "price": price_update,
             "category": category,
             "stock_count": stock_count,
-            "image_url": image_url
+            "image_url": image_url,
         }
-        
+
         update_url = f"{API_URL}product/{product_id.strip()}"
         response = requests.put(update_url, json=payload, cookies={SECRET_KEY: token})
-        
+
         if response.status_code == 200:
             st.success("המוצר עודכן בהצלחה!")
             st.json(response.json())
@@ -133,20 +126,19 @@ if submit_button:
 # צריך לטפל בעדכון חלקי של מוצר
 
 
-
 st.title("שליפת מוצר  לפי ID")
 
 with st.form("get_product_form"):
     product_id = st.text_input("ID")
-    
+
     submit_button = st.form_submit_button("שלוף מוצר")
 
 if submit_button:
     if product_id:
         get_url = f"{API_URL}product/{product_id}"
-        
+
         response = requests.get(get_url, cookies={SECRET_KEY: token})
-        
+
         if response.status_code == 200:
             st.success("המוצר נשלף בהצלחה!")
             st.json(response.json())
