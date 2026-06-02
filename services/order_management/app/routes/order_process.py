@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 
+from app.core.elastic_search_client import get_elastic_search_client
+from app.core.rabbitmq_client import get_rabbitmq_client
+
 from app.service.cart_communication import send_request_to_cart_management_service
 from app.core.security import checking_basic_user_permissions
 from app.schemas.order import Order
@@ -7,7 +10,7 @@ from app.schemas.order import Order
 router = APIRouter()
 
 @router.post("/create_order", tags=["orders"])
-async def create_new_order(user_id=Depends(checking_basic_user_permissions)):
+async def create_new_order(user_id=Depends(checking_basic_user_permissions), elastic_search_client=Depends(get_elastic_search_client), rabbitmq_client=Depends(get_rabbitmq_client)):
     try:
         cart = await send_request_to_cart_management_service(user_id=user_id)
         new_order = Order(

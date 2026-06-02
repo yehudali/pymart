@@ -67,13 +67,19 @@ services:
       - 15672:15672
     environment:
       RABBITMQ_DEFAULT_USER: yehuda
-      RABBITMQ_DEFAULT_PASS: yehuda
+      RABBITMQ_DEFAULT_PASS: 1234
     configs:
       - source: rabbitmq-plugins
         target: /etc/rabbitmq/enabled_plugins
     volumes:
       - rabbitmq-lib:/var/lib/rabbitmq/
       - rabbitmq-log:/var/log/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 
   catalog_management:
@@ -123,9 +129,6 @@ services:
       - USER_SERVICE_HOST=user-service
       - SECRET_KEY=mysecretkey
       
-    depends_on:
-      - catalog_management
-      - user-service 
   
   
 
@@ -173,8 +176,13 @@ services:
       # - REDIS_PORT=6379
       
     depends_on:
-      - elasticsearch
-      - redis
+      elasticsearch:
+        condition: service_started
+      redis:
+        condition: service_started
+      catalog_management:
+        condition: service_started
+      
 
   order-management:
     container_name: order-management
@@ -196,9 +204,12 @@ services:
     
 
     depends_on:
-      - elasticsearch
-      - redis
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_started
+      redis:
+        condition: service_started
 
 
 
