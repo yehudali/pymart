@@ -7,6 +7,9 @@ from app.service.cart_communication import send_request_to_cart_management_servi
 from app.core.security import checking_basic_user_permissions
 from app.schemas.order import Order
 
+from app.repositories.elastic_crud import save_order
+from app.repositories.rabbitmq_publish import publish_new_order_to_manage_queue
+
 router = APIRouter()
 
 @router.post("/create_order", tags=["orders"])
@@ -16,7 +19,9 @@ async def create_new_order(user_id=Depends(checking_basic_user_permissions), ela
         new_order = Order(
         user_id=user_id,
         cart=cart.cart
-    )
+    )   
+        await save_order(elastic_client=elastic_search_client, order=new_order.model_copy().model_dump())
+        await publish_new_order_to_manage_queue(order=new_order.model_copy().model_dump(),rabbitmq_client=rabbitmq_client)
         
         # TODO הוספת לוגיקה של יצירת הזמנה ב-ES, ופרסום RABBITMQ
 
