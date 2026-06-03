@@ -1,7 +1,6 @@
 from fastapi import Request
-from pika import BlockingConnection
+from aio_pika.abc import AbstractRobustConnection
 
 
-
-def get_rabbitmq_client(request: Request)-> BlockingConnection:
-    return request.app.state.rabbitmq_client
+def get_rabbitmq_client(request: Request)-> AbstractRobustConnection:
+    return request.app.state.rabbitmq_client_async
