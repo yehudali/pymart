@@ -20,7 +20,7 @@ COLS = 3  ## מספר המוצרים בכל שורה
 
 
 def search_by_name():
-    with st.expander("🔍 חיפוש מוצר לפי שם"):
+    with st.expander("חיפוש מוצר לפי שם"):
         product_name = st.text_input("הכנס שם מוצר", key="search_name_input")
 
         if st.button("שלוף מוצר", key="search_name_btn"):
@@ -57,7 +57,7 @@ def search_by_name():
                 stock = product_src.get("stock_count", 0)
                 st.metric("מלאי", "✅ במלאי" if stock > 0 else "❌ אזל")
 
-            st.markdown(f"**📝 תיאור:** {product_src.get('description', 'אין תיאור')}")
+            st.markdown(f"**תיאור** {product_src.get('description', 'אין תיאור')}")
 
 
 @st.dialog("פרטי מוצר")
@@ -148,7 +148,7 @@ def render_product(product):
             else:
                 st.write("נכשל בהוספת המוצר לעגלה")
 
-        if st.button("מפרט המוצר🔎", key=f"details_{product_id}"):
+        if st.button("מפרט המוצר", key=f"details_{product_id}"):
             show_product_dialog(product)
 
 

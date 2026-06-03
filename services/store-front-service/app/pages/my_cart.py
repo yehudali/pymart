@@ -69,7 +69,7 @@ def main():
         st.warning("יש להתחבר כדי לצפות בעגלה")
         return
 
-    st.title("🛒 עגלת הקניות")
+    st.title("העגלה שלי")
 
     cart = get_cart()
 
@@ -134,7 +134,7 @@ def main():
             st.error("נכשל בביצוע ההזמנה")
 
     # ריקון עגלה
-    if st.button("🗑️ רוקן עגלה", type="secondary"):
+    if st.button("רוקן עגלה", type="secondary"):
         if delete_cart():
             st.success("העגלה רוקנה!")
             st.rerun()
