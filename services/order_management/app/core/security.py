@@ -66,3 +66,18 @@ def check_if_is_admin_user(
         raise HTTPException(
             status_code=401, detail="Unauthorized-No administrative permission "
         )
+
+
+def get_token(
+    request: Request, auth_header: HTTPAuthorizationCredentials = Depends(security)
+):
+    """פונקציה שנוספה במיוחד כאן בקובץ תחת הסרוויס הזמנות, משמשת אותנו בתהליך קבלת מייל המשתמש מהניהול משתמשים"""
+    if auth_header:
+        token = auth_header.credentials
+    else:
+        token = request.cookies.get(SECRET_KEY)
+
+        if not token:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
+        return token

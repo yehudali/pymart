@@ -201,6 +201,7 @@ services:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
       - SECRET_KEY=mysecretkey
+      - USER_MANAGEMENT_URL=http://user-service:8001
     
 
     depends_on:

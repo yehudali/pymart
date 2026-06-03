@@ -5,9 +5,10 @@ from app.core.elastic_search_client import get_elastic_search_client
 from app.core.rabbitmq_client import get_rabbitmq_channel
 
 from app.service.cart_communication import send_request_to_cart_management_service
-from app.core.security import checking_basic_user_permissions
+from app.core.security import checking_basic_user_permissions, get_token
 from app.schemas.order import Order
 
+from app.repositories.get_email_by_token import get_email_by_token
 from app.repositories.elastic_crud import save_order
 from app.repositories.rabbitmq_publish import publish_new_order_to_manage_queue
 
@@ -17,12 +18,14 @@ router = APIRouter()
 @router.post("/create_order", tags=["orders"])
 async def create_new_order(
     user_id=Depends(checking_basic_user_permissions),
+    token = Depends(get_token),
     elastic_search_client=Depends(get_elastic_search_client),
     rabbitmq_channel: AbstractChannel = Depends(get_rabbitmq_channel),
 ):
     try:
+        user_email =await get_email_by_token(token)
         cart = await send_request_to_cart_management_service(user_id=user_id)
-        new_order = Order(user_id=user_id, cart=cart.cart)
+        new_order = Order(user_id=user_id, cart=cart.cart, email=user_email)
 
         order_dict = new_order.model_dump(mode="json")
 
