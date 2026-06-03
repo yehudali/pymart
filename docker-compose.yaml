@@ -214,6 +214,16 @@ services:
 
 
 
+  email-notification-service:
+    build: services\email-notification-service
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://yehuda:1234@rabbitmq:5672/
+      QUEUE_NAME: order.place
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: "587"
+    env_file:
+      - services\email-notification-service/.env 
 
 
 configs:
