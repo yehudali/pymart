@@ -18,6 +18,13 @@ def get_cart():
     )
     if response.status_code == 200:
         return response.json()
+    
+    # טיפול בשגיאות שנזרקו בהפעלה
+    if response.status_code == 401:
+        st.warning(" אתה לא מחובר, התחבר מחדש:")
+        st.stop()
+    response.raise_for_status()
+    
     return None
 
 
