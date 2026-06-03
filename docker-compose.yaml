@@ -129,6 +129,7 @@ services:
       - MINIO_SECRET_KEY=minioadmin
       - CATALOG_SERVICE_HOST=catalog_management
       - USER_SERVICE_HOST=user-service
+      - ORDER_SERVICE_URL=http://order-management:8004
       - SECRET_KEY=mysecretkey
       
   

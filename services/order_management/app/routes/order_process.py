@@ -9,7 +9,7 @@ from app.core.security import checking_basic_user_permissions, get_token
 from app.schemas.order import Order
 
 from app.repositories.get_email_by_token import get_email_by_token
-from app.repositories.elastic_crud import save_order
+from app.repositories.elastic_crud import get_all_orders, save_order
 from app.repositories.rabbitmq_publish import publish_new_order_to_manage_queue
 
 router = APIRouter()
@@ -40,12 +40,11 @@ async def create_new_order(
 
 
 @router.get("/orders", tags=["orders"])
-async def get_orders(user_id: str = Depends(checking_basic_user_permissions)):
+async def get_orders(user_id: str = Depends(checking_basic_user_permissions), elastic_search_client=Depends(get_elastic_search_client)):
     try:
-        # TODO הוספת לוגיקה של getting orders from ES
-        pass
+        order_list = await get_all_orders(elastic_search_client)
+        return order_list
 
-        return {"message": "orders retrieved successfully"}
     except Exception as err:
         print(f"failed to retrieve orders for user {user_id}.. error: {err}")
         raise HTTPException(
