@@ -196,12 +196,10 @@ services:
     volumes:
       - ./services/order_management:/WORKDIR
     environment:
-      # - ELASTICSEARCH_HOST=elasticsearch
-      # - ELASTICSEARCH_PORT=9200
-      # - REDIS_HOST=redis
-      # - REDIS_PORT=6379
-      # - RABBITMQ_HOST=rabbitmq
-      # - RABBITMQ_PORT=5672
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT=9200
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
       - SECRET_KEY=mysecretkey
     
 
