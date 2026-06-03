@@ -165,7 +165,7 @@ services:
       - "8003:8003"
 
     volumes:
-      - ./:/WORKDIR
+      - ./services/cart_servise:/WORKDIR
     environment:
       - key=value
       - SECRET_KEY=mysecretkey
