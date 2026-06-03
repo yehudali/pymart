@@ -3,7 +3,7 @@ import redis.asyncio as redis
 from fastapi import APIRouter, Depends, HTTPException
 
 # from app.repositories.redis_crud import get_item
-from app.service.service import add_or_update_product_to_user_cart,delete_product_from_cart1, delete_cart1, update_quantity1, get_cart_product_and_information, is_product_exists_in_catalog
+from app.service.cart_crud import add_or_update_product_to_user_cart,delete_product_from_cart1, delete_cart1, update_quantity1, get_cart_product_and_information, is_product_exists_in_catalog
 from app.core.redis_client import get_redis_client
 from app.core.elasticsearch_client import get_elastic_client
 from app.core.security import checking_basic_user_permissions

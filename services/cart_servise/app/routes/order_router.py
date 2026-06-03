@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.core.redis_client import get_redis_client
 from app.service.creating_orders import create_order_service
-from app.service.service import delete_cart1
+from app.service.cart_crud import delete_cart1
 
 router = APIRouter()
 
