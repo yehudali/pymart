@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
 from jose import jwt
 import uuid
+from config import settings
 
 from elasticshearch_file import elasic_instance
 
-import os
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = settings.SECRET_KEY
 
 
 def find_user_by_email(email):

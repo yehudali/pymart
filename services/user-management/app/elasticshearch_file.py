@@ -1,12 +1,15 @@
 from elasticsearch import Elasticsearch
 import os
+from config import settings
+
 class ElasticsearchClient:
     def __init__(self, host='localhost', port=9200):
         self.es = Elasticsearch(f"http://{host}:{port}")
 
 
 # Initialize Elasticsearch client
-host = os.getenv("ELASTICSEARCH_HOST", "elasticsearch")
-port = int(os.getenv("ELASTICSEARCH_PORT", 9200))
+host = settings.ELASTICSEARCH_HOST
+port = settings.ELASTICSEARCH_PORT
+
 elasic_instance = ElasticsearchClient(host=host, port=port)
 
