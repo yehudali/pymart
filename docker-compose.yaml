@@ -5,8 +5,7 @@ services:
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - "discovery.type=single-node"
-      #
-      #
+      
 
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
@@ -172,7 +171,7 @@ services:
       - SECRET_KEY=mysecretkey
       - CATALOG_SERVICE_URL=http://catalog_management:8000
 
-      
+
     depends_on:
       elasticsearch:
         condition: service_started

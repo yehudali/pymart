@@ -4,3 +4,4 @@ pydantic[email]
 pydantic
 elasticsearch
 python-jose
+pydantic_settings

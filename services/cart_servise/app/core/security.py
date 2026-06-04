@@ -1,7 +1,8 @@
 from fastapi import Depends, HTTPException, Request
-from config import settings
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import jwt
+from app.core.config import settings
+
 
 SECRET_KEY = settings.SECRET_KEY
 
