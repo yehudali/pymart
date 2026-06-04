@@ -42,7 +42,7 @@ async def init_rabbitmq(app, queue_name: str):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-    app.state.elastic_client = AsyncElasticsearch(settings.elasticsearch_url)
+    app.state.elastic_client = AsyncElasticsearch(hosts=settings.ELASTICSEARCH_URL)
 
     await init_rabbitmq(app, queue_name="order.place")
 

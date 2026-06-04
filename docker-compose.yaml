@@ -200,7 +200,7 @@ services:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
 
-      - elasticsearch_url= http://elasticsearch:9200
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
       - USER_MANAGEMENT_URL=http://user-service:8001
       - CART_SERVICE_URL=http://cart-service:8003
 

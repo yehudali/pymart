@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     RABBITMQ_HOST: str = "rabbitmq"
     RABBITMQ_PORT: int = 5672
 
-    elasticsearch_url: str = "http://localhost:9200"
+    ELASTICSEARCH_URL: str = "http://elasticsearch:9200"
     USER_MANAGEMENT_URL: str = "http://user-service:8001"
     CART_SERVICE_URL:str = "http://cart-service:8003"
     
