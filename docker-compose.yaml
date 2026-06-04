@@ -103,11 +103,13 @@ services:
       retries: 3
       
     environment:
+      - SECRET_KEY=mysecretkey
+      
       - ELASTICSEARCH_URL=http://elasticsearch:9200
+      
       - MINIO_URL=minio:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
-      - SECRET_KEY=mysecretkey
     
     
   store-front-service:
@@ -206,7 +208,7 @@ services:
       - elasticsearch_url= http://elasticsearch:9200
       - USER_MANAGEMENT_URL=http://user-service:8001
       - CART_SERVICE_URL=http://cart-service:8003
-    
+
 
     depends_on:
       rabbitmq:

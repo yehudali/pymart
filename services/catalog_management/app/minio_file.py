@@ -1,17 +1,15 @@
 from typing import BinaryIO
 import boto3
 from botocore.exceptions import ClientError
-from catalog_conf import Minio_Settings
+from config import settings
 from dotenv import load_dotenv
 
-load_dotenv()
-env = Minio_Settings()
 
 client_boto3 = boto3.client(
     "s3",
-    endpoint_url=f"http://{env.MINIO_URL}",
-    aws_access_key_id=env.MINIO_ACCESS_KEY,
-    aws_secret_access_key=env.MINIO_SECRET_KEY,
+    endpoint_url=f"http://{settings.MINIO_URL}",
+    aws_access_key_id=settings.MINIO_ACCESS_KEY,
+    aws_secret_access_key=settings.MINIO_SECRET_KEY,
     verify=False
 )
 

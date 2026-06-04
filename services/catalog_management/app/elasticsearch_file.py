@@ -1,14 +1,14 @@
 from elasticsearch import Elasticsearch
-from catalog_conf import ElasticSettings
+from config import settings
 
 # -> https://elasticsearch:9200
 
-es = Elasticsearch(ElasticSettings.ELASTICSEARCH_URL)
+es = Elasticsearch(settings.ELASTICSEARCH_URL)
 INDEX_NAME = "products"
 
 
 def elasticsearch_helthchack():
-    print("dhe-url:", ElasticSettings.ELASTICSEARCH_URL)
+    print("dhe-url:", settings.ELASTICSEARCH_URL)
     return es.ping()
 
 
