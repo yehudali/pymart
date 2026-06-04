@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart-service
+  template:
+    metadata:
+      labels:
+        app: cart-service
+    spec:
+      containers:
+      - name: cart-service
+        image: yehudalinker/:
+        ports:
+        - containerPort: 8003
+        env:
+        - name: ELASTICSEARCH_HOST
+          value: "elasticsearch"
+        - name: ELASTICSEARCH_PORT
+          value: "9200"
+        - name: SECRET_KEY
+        - name: RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: USER_MANAGEMENT_URL
+          value: "http://user-management:8001"
+          valueFrom:
+            secretKeyRef:
+              name: pymart-secrets
+              key: SECRET_KEY
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8003
+          initialDelaySeconds: 10
+          periodSeconds: 10

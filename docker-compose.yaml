@@ -126,7 +126,7 @@ services:
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - CATALOG_SERVICE_HOST=catalog_management
-      - USER_SERVICE_HOST=user-service
+      - USER_SERVICE_HOST=user-management
       - ORDER_SERVICE_URL=http://order-management:8004
       - SECRET_KEY=mysecretkey
       
@@ -134,8 +134,8 @@ services:
   
 
 
-  user-service:
-    container_name: user-service
+  user-management:
+    container_name: user-management
     build:
       context: ./
       dockerfile: ./services/user-management/Dockerfile
@@ -201,7 +201,7 @@ services:
       - RABBITMQ_PORT=5672
 
       - ELASTICSEARCH_URL=http://elasticsearch:9200
-      - USER_MANAGEMENT_URL=http://user-service:8001
+      - USER_MANAGEMENT_URL=http://user-management:8001
       - CART_SERVICE_URL=http://cart-service:8003
 
 
