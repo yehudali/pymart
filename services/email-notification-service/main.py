@@ -45,8 +45,8 @@ def format_cart(cart: dict) -> str:
         quantity = int(item.get("quantity", 1))
         subtotal = price * quantity
         total   += subtotal
-        lines.append(f"  • {name} × {quantity}  —  ${subtotal:.2f}")
-    lines.append(f"\n  Total: ${total:.2f}")
+        lines.append(f"  • {name} × {quantity}  —  ₪{subtotal:.2f}")
+    lines.append(f"\n  Total: ₪{total:.2f}")
     return "\n".join(lines)
 
 def build_email(order: dict) -> tuple[str, str]:
@@ -75,7 +75,7 @@ def build_email(order: dict) -> tuple[str, str]:
         <tr>
           <td style="padding:8px 12px;border-bottom:1px solid #eee">{name}</td>
           <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center">{quantity}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right">${subtotal:.2f}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right">₪{subtotal:.2f}</td>
         </tr>"""
 
     subject = f"[{STORE_NAME}] Order #{order_id[:8].upper()} — {status}"
@@ -118,13 +118,13 @@ def build_email(order: dict) -> tuple[str, str]:
           <tfoot>
             <tr>
               <td colspan="2" style="padding:12px;font-weight:bold;text-align:right">Total</td>
-              <td style="padding:12px;font-weight:bold;text-align:right">${total:.2f}</td>
+              <td style="padding:12px;font-weight:bold;text-align:right">₪{total:.2f}</td>
             </tr>
           </tfoot>
         </table>
 
         <p style="margin-top:32px;color:#6b7280;font-size:13px">
-          If you have any questions, reply to this email.<br>
+          Not reply to this email.<br>
           Thank you for shopping with {STORE_NAME}!
         </p>
       </div>
