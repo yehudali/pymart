@@ -169,13 +169,9 @@ services:
     volumes:
       - ./services/cart_servise:/WORKDIR
     environment:
-      - key=value
       - SECRET_KEY=mysecretkey
-      # לשימוש בהמשך..... TODO
-      # - ELASTICSEARCH_HOST=elasticsearch
-      # - ELASTICSEARCH_PORT=9200
-      # - REDIS_HOST=redis
-      # - REDIS_PORT=6379
+      - CATALOG_SERVICE_URL=http://catalog_management:8000
+
       
     depends_on:
       elasticsearch:

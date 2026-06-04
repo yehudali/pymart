@@ -1,7 +1,7 @@
-import os
+from app.core.config import settings
 import httpx
 
-CATALOG_SERVICE_URL = os.getenv("CATALOG_SERVICE_URL", "http://catalog_management:8000")
+CATALOG_SERVICE_URL = settings.CATALOG_SERVICE_URL
 
 
 async def send_order_to_catalog(payload: list[dict]) -> bool:
