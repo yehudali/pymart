@@ -1,9 +1,9 @@
 from fastapi import Depends, HTTPException, Request
-import os
+from app.core.config import settings
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import jwt
 
-SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
+SECRET_KEY = settings.SECRET_KEY
 
 
 # בדיקת הטוקן

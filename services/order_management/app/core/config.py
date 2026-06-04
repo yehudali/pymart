@@ -2,15 +2,20 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    elasticsearch_url: str = "http://localhost:9200"
+    
+    SECRET_KEY:str = "mysecretkey"
 
-    RABBITMQ_HOST: str = "rabbitmq"
-    RABBITMQ_PORT: int = 5672
 
     RABBITMQ_DEFAULT_USER: str = "yehuda"
     RABBITMQ_DEFAULT_PASS: str = "1234"
 
+    RABBITMQ_HOST: str = "rabbitmq"
+    RABBITMQ_PORT: int = 5672
+
+    elasticsearch_url: str = "http://localhost:9200"
     USER_MANAGEMENT_URL: str = "http://user-service:8001"
+    CART_SERVICE_URL:str = "http://cart-service:8003"
+    
 
     model_config = SettingsConfigDict(env_file=".env")
 

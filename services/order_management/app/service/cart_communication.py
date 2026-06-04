@@ -1,10 +1,10 @@
     
 import os
 import httpx
-
+from app.core.config import settings
 from app.schemas.cart import CartResponse
 
-CART_SERVICE_URL = os.getenv("CART_SERVICE_URL", "http://cart-service:8003")  # Default to cart-service if not set
+CART_SERVICE_URL = settings.CART_SERVICE_URL  # Default to cart-service if not set
 
 async def send_request_to_cart_management_service(user_id) -> CartResponse:
     """שליחת בקשה לסרוויס העגלה בכדי ליצור 'תהליך יצירת הזמנה' שכוללת לקיחת כל הפרטים מהעגלה, ועדכון המלאי"""

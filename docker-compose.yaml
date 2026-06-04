@@ -121,9 +121,6 @@ services:
       - ./services/store-front-service:/WORKDIR
     environment:
       - CATALOG_SERVICE_URL=http://catalog_management:8000
-    
-      # - LOHIN_SERVICE_NAME=user-management #כבר אין צורך בשלב הזה
-      
       - MINIO_URL=host.docker.internal:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
@@ -197,12 +194,18 @@ services:
     volumes:
       - ./services/order_management:/WORKDIR
     environment:
-      - ELASTICSEARCH_HOST=elasticsearch
-      - ELASTICSEARCH_PORT=9200
+    
+      - SECRET_KEY=mysecretkey
+
+      - RABBITMQ_DEFAULT_USER=yehuda
+      - RABBITMQ_DEFAULT_PASS=1234
+
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
-      - SECRET_KEY=mysecretkey
+
+      - elasticsearch_url= http://elasticsearch:9200
       - USER_MANAGEMENT_URL=http://user-service:8001
+      - CART_SERVICE_URL=http://cart-service:8003
     
 
     depends_on:
